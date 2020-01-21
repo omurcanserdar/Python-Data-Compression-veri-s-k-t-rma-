@@ -1,0 +1,188 @@
+metin=str(input("Metin Giriniz : "))
+orjMetKrktrlr=[] #metin degiskenindeki herbir karakteri tutacak olan dizi
+tekrarliKarakterDizim=[] #metin degiskenindeki tekrarlanan karak. tutacak olan dizi
+asciikarsiliklari=[] #metin degis. karak. ascii karsiliklarini tutacak dizi
+asciikilikkarsiliklari=[] #metin degis. karak. ascii degerinin ikilik karsiligini #(8bit) tutacak dizi
+kodlanmisDict={} #sıkıstırılmıs metnin her bir karakterine key value atama icin dictionary
+
+def asciibul(param): #karakterin ascii karşılığını verecek fonksiyon 
+    return ord(param) #örn: i karakteri icin 105
+def Ascikilikbul(param): #ascii degerin 8bit olarak ifade edilmesi icin fonk.
+    return format(asciibul(param), '08b') #örn: i(105) icin 01101001
+def ikilikbul(param): #2lik sistemde sonucu bulmak icin fonk.
+    return format(param, '04b') #kodlanmisDict key 0 value i olsun.0 icin 0000 döndüren fonk.
+def dictEkle(hangiDict,referans,veri): #parametrelere göre dict e key ve value atayn fonk.
+    hangiDict[referans]=veri
+def diziKarakterSay(dizi): #dizideki toplam karakter sayısını dondurecek fonk.
+    sayac=0
+    for x in dizi: #dizi elemansayısı kadar don
+        sayac+=len(x) #sayac a elemanın karakter sayısını ekle
+    return sayac #sayacı dondur
+
+for krkt in metin: #metindeki herbir karakter icin don
+    orjMetKrktrlr.append(krkt) #orjMetKrktrlr dizime karakteri ekle
+    if(metin.count(krkt)>1): #eger karakterden 1den fazla varsa 
+        if krkt in tekrarliKarakterDizim: #eger karakter tekrarliKarakterDizim de bulunuyorsa
+            continue; #herhangi birsey yapma devam et
+        else: #bulunmuyorsa
+            tekrarliKarakterDizim.append(krkt) #demekki daha önce eklenmemis,tekrarlandı,dizime ekle
+            
+for asc in orjMetKrktrlr: #metindeki herbir karakter icin don
+    asciikarsiliklari.append(asciibul(asc)) #asciikarsiliklari dizime karakterin ascii degerini ekle
+    asciikilikkarsiliklari.append(Ascikilikbul(asc)) #asciikilikkarsiliklari dizime karakterin ascii degerini 8bit olarak ekle
+print("Metindeki Krkt. Ascii Karş. : ",asciikarsiliklari) #ascii değerlerini ekrana yaz
+print("Metindeki Krkt. Ascii Karş.(8bit) : ",asciikilikkarsiliklari) #ascii değerlerinin 8bit karsiligini ekrana yaz
+
+kisaltilmisMetin=""; #tekrarlanan karakterlerden arindirilmis metni tutmak icin degisken
+sayac=0 #dict e key olarak eklemek icin sayac
+for krktr in metin: #metindeki herbir karakter icin don
+    if krktr in kisaltilmisMetin: #krktr kisaltilmis metinde bulunuyorsa 
+        continue; #herhangi birsey yapma devam et
+    else: #bulunmuyorsa
+        kisaltilmisMetin+=krktr #kisaltilmis metnime krktr i ekle
+        dictEkle(kodlanmisDict,sayac,krktr) #kodlanmisDict ekle(örn: i icin; 0 : 'i' olarak ekler)
+        sayac=sayac+1 #sayaci 1 arttir
+        
+print("Sıkıştırılmış Metin: ",kisaltilmisMetin) #kisaltilmis metni ekrana yaz
+print("Sıkıştırılmış Metin Dict: ",kodlanmisDict) #kodlanmisDict i ekrana yaz
+
+key_list = list(kodlanmisDict.keys()) #kodlanmisDict key degerleri
+val_list = list(kodlanmisDict.values()) #kodlanmisDict value degerleri
+
+keyDizim=[] #key degerlerini tutacak dizim
+for harf in metin: #metindeki herbir karakter icin don
+    if harf in kodlanmisDict.values(): #eger karakter kodlanmisDict value larindan biriyse
+        keyDizim.append(key_list[val_list.index(harf)]) #karakteri val_list dizisi icindeki index sirasini döndürür
+        #ve bu index verisine gore key_list icindeki indexin verisini keyDizim e ekler 
+print("Her Karaktere bir Kod (Metin) : ",keyDizim) #keyDizim ekrana yaz
+
+
+
+v0=[]
+textv0=""
+for keySiraNo in keyDizim: #keyDizimdeki herbir eleman kadar don
+    v0.append(ikilikbul(keySiraNo)) #v0 a elemanin ikilik karsiliğini 4bit olarak ekle
+    textv0+=ikilikbul(keySiraNo) #elemanı textv0 a string olarak ekle
+print("Her Karaktere bir Kod (Metin) 4bit ",v0) #v0 ekrana yaz
+
+
+key_list2 = list(kodlanmisDict.keys()) #kodlanmisDict key degerleri
+val_list2 = list(kodlanmisDict.values()) #kodlanmisDict value degerleri
+
+keyDizim2=[] #key degerlerini tutacak dizim
+for harf in kisaltilmisMetin: #kisaltilmisMetin herbir karakter icin don
+    if harf in kodlanmisDict.values(): #eger karakter kodlanmisDict value larindan biriyse
+        keyDizim2.append(key_list2[val_list2.index(harf)]) #karakteri val_list2 dizisi icindeki index sirasini döndürür
+        #ve bu index verisine gore key_list2 icindeki indexin verisini keyDizim e ekler 
+print("Her Karaktere bir Kod (Kısaltılmış Metin): ",keyDizim2) #keyDizim2 ekrana yaz
+
+v1=[]
+textv1=""
+for keySiraNo in keyDizim2: #keyDizim2deki herbir eleman kadar don
+    v1.append(ikilikbul(keySiraNo)) #v1 e elemanin ikilik karsiliğini 4bit olarak ekle
+    textv1+=ikilikbul(keySiraNo) #elemanı textv1 a string olarak ekle
+print("Her Karaktere bir Kod (Kısaltılmış Metin) 4bit",v1) #v1 ekrana yaz
+
+anaharftopbyte=len(metin) #metin degiskeninin karakter uzunlugu
+anaharftopbit=anaharftopbyte*8 #metin degiskeninin bit uzunlugu
+print("Ana Metin",anaharftopbyte,"Byte(",anaharftopbit,"Bit)") #degerleri ekrana yaz
+
+sonucBit=diziKarakterSay(v1) #v1 in karakter uzunlugu
+oran=100-float(sonucBit/anaharftopbit)*100 #sıkıstırma oranı
+print("Sıkıştırılmış Metin ise",sonucBit,"Bit") #degeri ekrana yaz
+print("Sıkıştırılmış Metin ve Kod:",kisaltilmisMetin,"||",textv1) #kisaltimis metin ve kod karsiligini ekrana yaz
+print("Sıkıştırma Oranı:",oran) #sıkıstırma oranını ekrana yaz
+metin=str(input("Metin Giriniz : "))
+orjMetKrktrlr=[] #metin degiskenindeki herbir karakteri tutacak olan dizi
+tekrarliKarakterDizim=[] #metin degiskenindeki tekrarlanan karak. tutacak olan dizi
+asciikarsiliklari=[] #metin degis. karak. ascii karsiliklarini tutacak dizi
+asciikilikkarsiliklari=[] #metin degis. karak. ascii degerinin ikilik karsiligini #(8bit) tutacak dizi
+kodlanmisDict={} #sıkıstırılmıs metnin her bir karakterine key value atama icin dictionary
+
+def asciibul(param): #karakterin ascii karşılığını verecek fonksiyon 
+    return ord(param) #örn: i karakteri icin 105
+def Ascikilikbul(param): #ascii degerin 8bit olarak ifade edilmesi icin fonk.
+    return format(asciibul(param), '08b') #örn: i(105) icin 01101001
+def ikilikbul(param): #2lik sistemde sonucu bulmak icin fonk.
+    return format(param, '04b') #kodlanmisDict key 0 value i olsun.0 icin 0000 döndüren fonk.
+def dictEkle(hangiDict,referans,veri): #parametrelere göre dict e key ve value atayn fonk.
+    hangiDict[referans]=veri
+def diziKarakterSay(dizi): #dizideki toplam karakter sayısını dondurecek fonk.
+    sayac=0
+    for x in dizi: #dizi elemansayısı kadar don
+        sayac+=len(x) #sayac a elemanın karakter sayısını ekle
+    return sayac #sayacı dondur
+
+for krkt in metin: #metindeki herbir karakter icin don
+    orjMetKrktrlr.append(krkt) #orjMetKrktrlr dizime karakteri ekle
+    if(metin.count(krkt)>1): #eger karakterden 1den fazla varsa 
+        if krkt in tekrarliKarakterDizim: #eger karakter tekrarliKarakterDizim de bulunuyorsa
+            continue; #herhangi birsey yapma devam et
+        else: #bulunmuyorsa
+            tekrarliKarakterDizim.append(krkt) #demekki daha önce eklenmemis,tekrarlandı,dizime ekle
+            
+for asc in orjMetKrktrlr: #metindeki herbir karakter icin don
+    asciikarsiliklari.append(asciibul(asc)) #asciikarsiliklari dizime karakterin ascii degerini ekle
+    asciikilikkarsiliklari.append(Ascikilikbul(asc)) #asciikilikkarsiliklari dizime karakterin ascii degerini 8bit olarak ekle
+print("Metindeki Krkt. Ascii Karş. : ",asciikarsiliklari) #ascii değerlerini ekrana yaz
+print("Metindeki Krkt. Ascii Karş.(8bit) : ",asciikilikkarsiliklari) #ascii değerlerinin 8bit karsiligini ekrana yaz
+
+kisaltilmisMetin=""; #tekrarlanan karakterlerden arindirilmis metni tutmak icin degisken
+sayac=0 #dict e key olarak eklemek icin sayac
+for krktr in metin: #metindeki herbir karakter icin don
+    if krktr in kisaltilmisMetin: #krktr kisaltilmis metinde bulunuyorsa 
+        continue; #herhangi birsey yapma devam et
+    else: #bulunmuyorsa
+        kisaltilmisMetin+=krktr #kisaltilmis metnime krktr i ekle
+        dictEkle(kodlanmisDict,sayac,krktr) #kodlanmisDict ekle(örn: i icin; 0 : 'i' olarak ekler)
+        sayac=sayac+1 #sayaci 1 arttir
+        
+print("Sıkıştırılmış Metin: ",kisaltilmisMetin) #kisaltilmis metni ekrana yaz
+print("Sıkıştırılmış Metin Dict: ",kodlanmisDict) #kodlanmisDict i ekrana yaz
+
+key_list = list(kodlanmisDict.keys()) #kodlanmisDict key degerleri
+val_list = list(kodlanmisDict.values()) #kodlanmisDict value degerleri
+
+keyDizim=[] #key degerlerini tutacak dizim
+for harf in metin: #metindeki herbir karakter icin don
+    if harf in kodlanmisDict.values(): #eger karakter kodlanmisDict value larindan biriyse
+        keyDizim.append(key_list[val_list.index(harf)]) #karakteri val_list dizisi icindeki index sirasini döndürür
+        #ve bu index verisine gore key_list icindeki indexin verisini keyDizim e ekler 
+print("Her Karaktere bir Kod (Metin) : ",keyDizim) #keyDizim ekrana yaz
+
+
+
+v0=[]
+textv0=""
+for keySiraNo in keyDizim: #keyDizimdeki herbir eleman kadar don
+    v0.append(ikilikbul(keySiraNo)) #v0 a elemanin ikilik karsiliğini 4bit olarak ekle
+    textv0+=ikilikbul(keySiraNo) #elemanı textv0 a string olarak ekle
+print("Her Karaktere bir Kod (Metin) 4bit ",v0) #v0 ekrana yaz
+
+
+key_list2 = list(kodlanmisDict.keys()) #kodlanmisDict key degerleri
+val_list2 = list(kodlanmisDict.values()) #kodlanmisDict value degerleri
+
+keyDizim2=[] #key degerlerini tutacak dizim
+for harf in kisaltilmisMetin: #kisaltilmisMetin herbir karakter icin don
+    if harf in kodlanmisDict.values(): #eger karakter kodlanmisDict value larindan biriyse
+        keyDizim2.append(key_list2[val_list2.index(harf)]) #karakteri val_list2 dizisi icindeki index sirasini döndürür
+        #ve bu index verisine gore key_list2 icindeki indexin verisini keyDizim e ekler 
+print("Her Karaktere bir Kod (Kısaltılmış Metin): ",keyDizim2) #keyDizim2 ekrana yaz
+
+v1=[]
+textv1=""
+for keySiraNo in keyDizim2: #keyDizim2deki herbir eleman kadar don
+    v1.append(ikilikbul(keySiraNo)) #v1 e elemanin ikilik karsiliğini 4bit olarak ekle
+    textv1+=ikilikbul(keySiraNo) #elemanı textv1 a string olarak ekle
+print("Her Karaktere bir Kod (Kısaltılmış Metin) 4bit",v1) #v1 ekrana yaz
+
+anaharftopbyte=len(metin) #metin degiskeninin karakter uzunlugu
+anaharftopbit=anaharftopbyte*8 #metin degiskeninin bit uzunlugu
+print("Ana Metin",anaharftopbyte,"Byte(",anaharftopbit,"Bit)") #degerleri ekrana yaz
+
+sonucBit=diziKarakterSay(v1) #v1 in karakter uzunlugu
+oran=100-float(sonucBit/anaharftopbit)*100 #sıkıstırma oranı
+print("Sıkıştırılmış Metin ise",sonucBit,"Bit") #degeri ekrana yaz
+print("Sıkıştırılmış Metin ve Kod:",kisaltilmisMetin,"||",textv1) #kisaltimis metin ve kod karsiligini ekrana yaz
+print("Sıkıştırma Oranı:",oran) #sıkıstırma oranını ekrana yaz
